@@ -23,9 +23,7 @@ modSettings {
     entrypoint("main", "org.teamvoided.templatemod.TemplateMod::commonInit")
     entrypoint("client", "org.teamvoided.templatemod.TemplateMod::clientInit")
 
-    mutation {
-        custom = null
-    }
+    isModParent(true)
 }
 
 tasks {
