@@ -1,2 +1,2 @@
 # The TeamVoided Template Mod
-###### idk
+real text goes here
