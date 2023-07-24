@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.9.0"
     kotlin("plugin.serialization") version "1.9.0"
-    id("org.teamvoided.iridium") version "2.2.2"
-    id("iridium.mod.build-script") version "2.2.2"
+    id("org.teamvoided.iridium") version "2.2.3"
+    id("iridium.mod.build-script") version "2.2.3"
 }
 
 group = project.properties["maven_group"]!!
