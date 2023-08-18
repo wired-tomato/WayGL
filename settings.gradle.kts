@@ -9,5 +9,5 @@ pluginManagement {
     }
 }
 
-rootProject.name = "TeamVoidedTemplateMod"
+rootProject.name = "TeamVoidedTemplate"
 

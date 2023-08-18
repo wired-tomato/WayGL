@@ -10,7 +10,7 @@ plugins {
 group = project.properties["maven_group"]!!
 version = project.properties["mod_version"]!!
 base.archivesName.set(project.properties["archives_base_name"] as String)
-description = "TeamVoided Template Mod"
+description = "TeamVoided Template Description"
 
 repositories {
     mavenCentral()
@@ -18,14 +18,14 @@ repositories {
 
 modSettings {
     modId(base.archivesName.get())
-    modName("Team Voided Template Mod")
+    modName("Team Voided Template")
 
-    entrypoint("main", "org.teamvoided.templatemod.TemplateMod::commonInit")
-    entrypoint("client", "org.teamvoided.templatemod.TemplateMod::clientInit")
+    entrypoint("main", "org.teamvoided.template.Template::commonInit")
+    entrypoint("client", "org.teamvoided.template.Template::clientInit")
 
-    mutation {
-        custom = null
-    }
+    mixinFile("template.mixins.json")
+
+    isModParent(true)
 }
 
 tasks {
