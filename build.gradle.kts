@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    id("fabric-loom") version "1.3.8"
     kotlin("jvm") version "1.9.0"
     kotlin("plugin.serialization") version "1.9.0"
-    id("org.teamvoided.iridium") version "2.4.0"
-    id("iridium.mod.build-script") version "2.4.0"
+    id("org.teamvoided.iridium") version "3.0.2"
 }
 
 group = project.properties["maven_group"]!!
@@ -22,8 +22,6 @@ modSettings {
 
     entrypoint("main", "org.teamvoided.templatemod.TemplateMod::commonInit")
     entrypoint("client", "org.teamvoided.templatemod.TemplateMod::clientInit")
-
-    isModParent(true)
 }
 
 tasks {
