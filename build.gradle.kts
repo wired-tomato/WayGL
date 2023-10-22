@@ -10,18 +10,19 @@ plugins {
 group = project.properties["maven_group"]!!
 version = project.properties["mod_version"]!!
 base.archivesName.set(project.properties["archives_base_name"] as String)
-description = "TeamVoided Template Mod"
+description = "TeamVoided Template"
+val modid = project.properties["modid"]!! as String
 
 repositories {
     mavenCentral()
 }
 
 modSettings {
-    modId(base.archivesName.get())
-    modName("Team Voided Template Mod")
+    modId(modid)
+    modName("Team Voided Template")
 
-    entrypoint("main", "org.teamvoided.templatemod.TemplateMod::commonInit")
-    entrypoint("client", "org.teamvoided.templatemod.TemplateMod::clientInit")
+    entrypoint("main", "org.teamvoided.template.Template::commonInit")
+    entrypoint("client", "org.teamvoided.template.Template::clientInit")
 }
 
 tasks {
