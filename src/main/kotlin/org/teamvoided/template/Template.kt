@@ -19,5 +19,4 @@ object Template {
     }
 
     fun id(path: String) = Identifier(MODID, path)
-    fun mc(path: String) = Identifier(path)
 }
