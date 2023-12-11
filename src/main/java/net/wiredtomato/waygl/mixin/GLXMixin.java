@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.function.LongSupplier;
 
 @Mixin(GLX.class)
-public class GLXMixin {
+public abstract class GLXMixin {
     @Inject(method = "_initGlfw", at = @At("HEAD"), remap = false)
     private static void init(CallbackInfoReturnable<LongSupplier> cir) {
         WayGL.tryUseWayland();
