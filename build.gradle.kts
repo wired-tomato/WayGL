@@ -10,7 +10,7 @@ plugins {
 group = project.properties["maven_group"]!!
 version = project.properties["mod_version"]!!
 base.archivesName.set(project.properties["archives_base_name"] as String)
-description = "TeamVoided Template"
+description = "Make GLFW use wayland on supported systems"
 val modid = project.properties["modid"]!! as String
 
 repositories {
