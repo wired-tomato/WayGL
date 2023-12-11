@@ -1,2 +1,2 @@
-# The TeamVoided Template
-Template mod by TeamVoided
+# WayGL
+Make GLFW use wayland on linux systems

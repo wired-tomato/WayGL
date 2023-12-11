@@ -9,5 +9,5 @@ pluginManagement {
     }
 }
 
-rootProject.name = "TeamVoidedTemplate"
+rootProject.name = "WayGL"
 

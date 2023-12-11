@@ -4,7 +4,7 @@ plugins {
     id("fabric-loom") version "1.3.8"
     kotlin("jvm") version "1.9.0"
     kotlin("plugin.serialization") version "1.9.0"
-    id("org.teamvoided.iridium") version "3.1.0"
+    id("org.teamvoided.iridium") version "3.1.9"
 }
 
 group = project.properties["maven_group"]!!
@@ -21,8 +21,8 @@ modSettings {
     modId(modid)
     modName("Team Voided Template")
 
-    entrypoint("main", "org.teamvoided.template.Template::commonInit")
-    entrypoint("client", "org.teamvoided.template.Template::clientInit")
+    entrypoint("client", "net.wiredtomato.waygl.WayGL::clientInit")
+    mixinFile("waygl.mixins.json")
 }
 
 tasks {

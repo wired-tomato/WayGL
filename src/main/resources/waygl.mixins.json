@@ -1,12 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "org.teamvoided.template.mixin",
+  "package": "net.wiredtomato.waygl.mixin",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [
-    "Template"
-  ],
+  "mixins": [],
   "client": [
+    "GLXMixin",
+    "GLFWMixin"
   ],
   "injectors": {
     "defaultRequire": 1

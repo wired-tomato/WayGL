@@ -1,8 +1,8 @@
-projectTitle = "TeamVoidedTemplateMod"
-modId = "team-voided-template-mod"
-githubRepo = "Teamvoided/TeamVoidedTemplateMod"
+projectTitle = "WayGL"
+modId = "waygl"
+githubRepo = "wired-tomato/WayGL"
 discordServerInviteId = "KZ5Q364hEg"
-authors = [ "brokenfuse" ]
+authors = [ "wiredtomato" ]
 majorMinecraftVersion = "1.20"
 minecraftVersion = "1.20.1"
 fabricLoaderVersion = "0.14.21"
