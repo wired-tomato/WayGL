@@ -19,7 +19,7 @@ repositories {
 
 modSettings {
     modId(modid)
-    modName("Team Voided Template")
+    modName("WayGL")
 
     entrypoint("client", "net.wiredtomato.waygl.WayGL::clientInit")
     mixinFile("waygl.mixins.json")
