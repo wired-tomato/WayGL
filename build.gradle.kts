@@ -23,6 +23,16 @@ modSettings {
 
     entrypoint("client", "net.wiredtomato.waygl.WayGL::clientInit")
     mixinFile("waygl.mixins.json")
+
+    mutation {
+        this.depends.remove("fabric-api")
+        this.depends["fabric"] = "*"
+        this.depends["minecraft"] = ">=1.17"
+    }
+}
+
+dependencies {
+    implementation("org.lwjgl:lwjgl-glfw:3.3.2")
 }
 
 tasks {
