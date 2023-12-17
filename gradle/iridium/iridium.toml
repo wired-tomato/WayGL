@@ -3,10 +3,10 @@ modId = "waygl"
 githubRepo = "wired-tomato/WayGL"
 discordServerInviteId = "KZ5Q364hEg"
 authors = [ "wiredtomato" ]
-majorMinecraftVersion = "1.17"
-minecraftVersion = "1.17"
+majorMinecraftVersion = "1.19"
+minecraftVersion = "1.19.3"
 fabricLoaderVersion = "0.14.21"
-fabricApiVersion = "0.36.0+1.17"
+fabricApiVersion = "0.76.1+1.19.3"
 fabricLangKotlinVersion = "1.10.16+kotlin.1.9.21"
 license = "MIT"
 modules = [ ]
@@ -20,4 +20,4 @@ modules = [ ]
     # MOJPARCH: Parchment layered on top of the official Mojang mappings
     # MOJYARN: Yarn layered on top of the official Mojang mappings
     type = "YARN"
-    version = "1.17+build.13"
+    version = "1.19.3+build.5"

@@ -25,9 +25,7 @@ modSettings {
     mixinFile("waygl.mixins.json")
 
     mutation {
-        this.depends.remove("fabric-api")
-        this.depends["fabric"] = "*"
-        this.depends["minecraft"] = ">=1.17"
+        this.depends["minecraft"] = ">=1.19.3"
     }
 }
 
