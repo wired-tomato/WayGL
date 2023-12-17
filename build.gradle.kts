@@ -23,6 +23,10 @@ modSettings {
 
     entrypoint("client", "net.wiredtomato.waygl.WayGL::clientInit")
     mixinFile("waygl.mixins.json")
+
+    mutation {
+        this.depends["minecraft"] = "1.20"
+    }
 }
 
 tasks {
