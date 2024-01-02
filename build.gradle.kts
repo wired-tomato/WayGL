@@ -29,6 +29,10 @@ modSettings {
     }
 }
 
+dependencies {
+    implementation("org.lwjgl:lwjgl-glfw:3.3.2")
+}
+
 tasks {
     val targetJavaVersion = 17
     withType<JavaCompile> {
