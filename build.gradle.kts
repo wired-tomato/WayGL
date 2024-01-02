@@ -25,7 +25,7 @@ modSettings {
     mixinFile("waygl.mixins.json")
 
     mutation {
-        this.depends["minecraft"] = "1.20"
+        this.depends["minecraft"] = ">=1.20"
     }
 }
 
