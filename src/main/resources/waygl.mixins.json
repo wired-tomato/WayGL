@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "net.wiredtomato.waygl.mixin",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [],
+  "mixins": [ ],
   "client": [
     "GLXMixin",
     "WindowMixin"
