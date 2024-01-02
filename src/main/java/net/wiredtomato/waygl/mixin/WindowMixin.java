@@ -1,11 +1,10 @@
 package net.wiredtomato.waygl.mixin;
 
-import net.minecraft.SharedConstants;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.WindowEventHandler;
 import net.minecraft.client.WindowSettings;
-import net.minecraft.client.util.*;
-import net.minecraft.resource.ResourcePack;
+import net.minecraft.client.util.MonitorTracker;
+import net.minecraft.client.util.Window;
+import net.minecraft.resource.InputSupplier;
 import net.wiredtomato.waygl.IconInjector;
 import net.wiredtomato.waygl.WayGL;
 import org.spongepowered.asm.mixin.Final;
@@ -14,6 +13,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.io.InputStream;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -31,16 +32,16 @@ public abstract class WindowMixin {
     }
 
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lorg/lwjgl/glfw/GLFW;glfwSetCursorEnterCallback(JLorg/lwjgl/glfw/GLFWCursorEnterCallbackI;)Lorg/lwjgl/glfw/GLFWCursorEnterCallback;"))
-    public void waygl$setIcon(WindowEventHandler windowEventHandler, MonitorTracker monitorTracker, WindowSettings windowSettings, String string, String string2, CallbackInfo ci) {
+    public void waygl$showWindow(WindowEventHandler windowEventHandler, MonitorTracker monitorTracker, WindowSettings windowSettings, String string, String string2, CallbackInfo ci) {
         if (WayGL.useWayland()) {
             glfwShowWindow(handle);
-            IconInjector.INSTANCE.setIcon(MinecraftClient.getInstance().getDefaultResourcePack(), SharedConstants.getGameVersion().isStable() ? Icons.RELEASE : Icons.SNAPSHOT);
         }
     }
 
     @Inject(method = "setIcon", at = @At("HEAD"), cancellable = true)
-    public void waygl$cancelIcon(ResourcePack resourcePack, Icons icons, CallbackInfo ci) {
+    public void waygl$customSetIcon(InputSupplier<InputStream> inputSupplier, InputSupplier<InputStream> inputSupplier2, CallbackInfo ci) {
         if (WayGL.useWayland()) {
+            IconInjector.INSTANCE.setIcon(new InputSupplier[] {inputSupplier, inputSupplier2});
             ci.cancel();
         }
     }

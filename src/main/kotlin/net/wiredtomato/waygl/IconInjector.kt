@@ -1,10 +1,10 @@
 package net.wiredtomato.waygl
 
 import net.fabricmc.loader.api.FabricLoader
-import net.minecraft.client.util.Icons
-import net.minecraft.resource.ResourcePack
+import net.minecraft.resource.InputSupplier
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
+import java.io.InputStream
 import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
@@ -48,11 +48,9 @@ object IconInjector {
         updateIconSys()
     }
 
-    fun setIcon(resourcePack: ResourcePack, icons: Icons) {
+    fun setIcon(icons: Array<InputSupplier<InputStream>>) {
         val result = {
-            val suppliers = icons.getIcons(resourcePack)
-
-            val rawIcons = suppliers.map {
+            val rawIcons = icons.map {
                 ByteBuffer.wrap(it.get().readAllBytes())
             }.toTypedArray()
 
@@ -89,8 +87,6 @@ object IconInjector {
                 return 1
             }
         }
-
-
 
         updateIconSys()
 
