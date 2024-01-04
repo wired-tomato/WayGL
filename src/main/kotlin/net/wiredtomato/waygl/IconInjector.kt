@@ -1,7 +1,6 @@
 package net.wiredtomato.waygl
 
 import net.fabricmc.loader.api.FabricLoader
-import net.minecraft.resource.InputSupplier
 import java.awt.image.BufferedImage
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
@@ -45,15 +44,15 @@ object IconInjector {
         updateIconSys()
     }
 
-    fun setIcon(suppliers: Array<InputSupplier<InputStream>>) {
+    fun setIcon(suppliers: Array<InputStream>) {
         val result = {
             suppliers.forEach {
-                val image: BufferedImage = ImageIO.read(it.get())
+                val image: BufferedImage = ImageIO.read(it)
                 val target: Path = getIconFileLoc(
                     image.width,
                     image.height
                 )
-                injectFile(target, it.get().readAllBytes())
+                injectFile(target, it.readAllBytes())
             }
         }.runCatching {
             this()

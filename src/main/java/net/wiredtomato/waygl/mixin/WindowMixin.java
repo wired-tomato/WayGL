@@ -4,7 +4,6 @@ import net.minecraft.client.WindowEventHandler;
 import net.minecraft.client.WindowSettings;
 import net.minecraft.client.util.MonitorTracker;
 import net.minecraft.client.util.Window;
-import net.minecraft.resource.InputSupplier;
 import net.wiredtomato.waygl.IconInjector;
 import net.wiredtomato.waygl.WayGL;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,11 +26,10 @@ public abstract class WindowMixin {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Inject(method = "setIcon", at = @At("HEAD"), cancellable = true)
-	private void waygl$setIcon(InputSupplier<InputStream> inputSupplier, InputSupplier<InputStream> inputSupplier2, CallbackInfo ci) {
+	private void waygl$setIcon(InputStream inputStream, InputStream inputStream2, CallbackInfo ci) {
 		if (WayGL.useWayland()) {
-			IconInjector.INSTANCE.setIcon(new InputSupplier[] { inputSupplier, inputSupplier2 });
+			IconInjector.INSTANCE.setIcon(new InputStream[] { inputStream, inputStream2 });
 			ci.cancel();
 		}
 	}
