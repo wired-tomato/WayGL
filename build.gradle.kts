@@ -26,6 +26,8 @@ modSettings {
 
     mutation {
         this.depends["minecraft"] = ">=1.20"
+        //FAPI is not required
+        this.depends.remove("fabric-api")
     }
 }
 
