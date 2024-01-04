@@ -19,7 +19,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public abstract class WindowMixin {
 
 	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lorg/lwjgl/glfw/GLFW;glfwCreateWindow(IILjava/lang/CharSequence;JJ)J"))
-	public void waygl$addWindowHints(WindowEventHandler windowEventHandler, MonitorTracker monitorTracker, WindowSettings windowSettings, String string, String string2, CallbackInfo ci) {
+	private void waygl$addWindowHints(WindowEventHandler windowEventHandler, MonitorTracker monitorTracker, WindowSettings windowSettings, String string, String string2, CallbackInfo ci) {
 		if (WayGL.useWayland()) {
 			glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_FALSE);
 			IconInjector.INSTANCE.inject();
