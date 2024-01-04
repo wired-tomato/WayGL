@@ -1,24 +1,22 @@
 package net.wiredtomato.waygl
 
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.resource.InputSupplier
 import java.awt.image.BufferedImage
-import java.io.ByteArrayOutputStream
 import java.io.InputStream
-import java.nio.ByteBuffer
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import javax.imageio.ImageIO
-import kotlin.math.sqrt
 
 
 object IconInjector {
-    val APP_ID = "com.mojang.minecraft"
-    val ICON_NAME = "minecraft.png"
-    val FILE_NAME = "$APP_ID.desktop"
-    val LOCATION = "/assets/${WayGL.MODID}/$FILE_NAME"
-    val injects = mutableListOf<Path>()
+    const val APP_ID = "com.mojang.minecraft"
+    private const val ICON_NAME = "minecraft.png"
+    private const val FILE_NAME = "$APP_ID.desktop"
+    private const val LOCATION = "/assets/${WayGL.MODID}/$FILE_NAME"
+    private val injects = mutableListOf<Path>()
 
     fun inject() {
         Runtime.getRuntime().addShutdownHook(Thread(IconInjector::uninject))
@@ -47,13 +45,16 @@ object IconInjector {
         updateIconSys()
     }
 
-    fun setIcon(icons: Array<InputStream>) {
+    fun setIcon(suppliers: Array<InputSupplier<InputStream>>) {
         val result = {
-            val rawIcons = icons.map {
-                ByteBuffer.wrap(it.readAllBytes())
-            }.toTypedArray()
-
-            setIcon(rawIcons)
+            suppliers.forEach {
+                val image: BufferedImage = ImageIO.read(it.get())
+                val target: Path = getIconFileLoc(
+                    image.width,
+                    image.height
+                )
+                injectFile(target, it.get().readAllBytes())
+            }
         }.runCatching {
             this()
         }
@@ -61,37 +62,6 @@ object IconInjector {
         if (result.isFailure) {
             throw result.exceptionOrNull()!!
         }
-    }
-
-    private fun setIcon(icons: Array<ByteBuffer>): Int {
-        icons.forEach { icon ->
-            val result = {
-                val pixels = mutableListOf<Int>()
-                for (i in 0 until icon.remaining() / 4) {
-                    pixels.add(Integer.rotateRight(icon.getInt(), 8))
-                }
-                val size = sqrt(pixels.size.toDouble()).toInt()
-                val image = BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB)
-                image.setRGB(0, 0, size, size, pixels.toIntArray(), 0, size)
-                val target: Path = getIconFileLoc(image.width, image.height)
-                val outputStream = ByteArrayOutputStream()
-                ImageIO.write(image, "png", outputStream)
-
-                injectFile(target, outputStream.toByteArray())
-            }.runCatching {
-                this()
-            }
-
-            if (result.isFailure) {
-                return 1
-            }
-        }
-
-
-
-        updateIconSys()
-
-        return 0
     }
 
     private fun injectFile(target: Path, data: ByteArray) {

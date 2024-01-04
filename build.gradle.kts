@@ -25,9 +25,10 @@ modSettings {
     mixinFile("waygl.mixins.json")
 
     mutation {
-        this.depends.remove("fabric-api")
-        this.depends["fabric"] = "*"
         this.depends["minecraft"] = ">=1.17"
+
+        //FAPI is not required
+        this.depends.remove("fabric-api")
     }
 }
 
