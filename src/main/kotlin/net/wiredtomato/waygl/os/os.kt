@@ -6,7 +6,6 @@ import org.lwjgl.system.JNI
 import org.lwjgl.system.MemoryStack
 import org.lwjgl.system.MemoryUtil
 
-
 object OSUtils {
     fun os(): OS {
         return if (SystemUtils.IS_OS_WINDOWS) {

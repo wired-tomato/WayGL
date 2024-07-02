@@ -19,6 +19,7 @@ repositories {
     mavenCentral()
     maven("https://maven.terraformersmc.com/releases")
     maven("https://api.modrinth.com/maven")
+    maven("https://oss.sonatype.org/content/repositories/snapshots")
     maven("https://maven.isxander.dev/releases") {
         name = "Xander Maven"
     }
@@ -30,9 +31,9 @@ dependencies {
     modImplementation(libs.fabric.loader)
     modImplementation(libs.fabric.kt)
 
-    modImplementation(libs.fabric.api)
     modImplementation(libs.yacl)
     modImplementation(libs.mod.menu)
+    implementation("org.lwjgl:lwjgl-glfw:3.3.3")
 }
 
 tasks {
@@ -44,7 +45,7 @@ tasks {
         }
     }
 
-    val targetJavaVersion = 21
+    val targetJavaVersion = 17
     withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
         options.release.set(targetJavaVersion)
@@ -52,7 +53,7 @@ tasks {
 
     withType<KotlinCompile>().all {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
@@ -74,7 +75,7 @@ modrinth {
     versionNumber.set(project.version.toString())
     versionType.set("release")
     uploadFile.set(tasks.jar)
-    gameVersions.addAll("1.21")
+    gameVersions.addAll("1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4")
     loaders.add("fabric")
     dependencies {
         required.project("fabric-language-kotlin")

@@ -1,10 +1,9 @@
 [versions]
-minecraft = "1.21"
-yarn_mappings = "1.21+build.1"
+minecraft = "1.20"
+yarn_mappings = "1.20+build.1"
 fabric_loader = "0.15.11"
 fabric_kt = "1.11.0+kotlin.2.0.0"
-fabric_api = "0.100.1+1.21"
-yacl = "3.5.0+1.21-fabric"
+yacl = "3.2.2+1.20"
 modmenu = "11.0.0-beta.1"
 minotaur = "2.+"
 
@@ -13,8 +12,7 @@ minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
 yarn_mappings = { module = "net.fabricmc:yarn", version.ref = "yarn_mappings" }
 fabric_loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric_loader" }
 fabric_kt = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric_kt" }
-fabric_api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric_api" }
-yacl = { module = "dev.isxander:yet-another-config-lib", version.ref = "yacl" }
+yacl = { module = "dev.isxander.yacl:yet-another-config-lib-fabric", version.ref = "yacl" }
 mod_menu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }
 
 [plugins]
