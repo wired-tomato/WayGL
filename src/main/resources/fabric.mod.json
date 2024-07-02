@@ -8,8 +8,8 @@
 		"WiredTomato"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://modrinth.com/mod/waygl",
+		"sources": "https://github.com/wired-tomato/WayGL"
 	},
 	"license": "MIT",
 	"icon": "assets/waygl/icon.png",
