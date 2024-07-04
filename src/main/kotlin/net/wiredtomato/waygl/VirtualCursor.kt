@@ -108,13 +108,24 @@ object VirtualCursor {
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f)
             RenderSystem.setShaderTexture(0, image)
 
-            val scale = MinecraftClient.getInstance().window.scaleFactor
+            val window = MinecraftClient.getInstance().window
+            val scale = window.scaleFactor
+
+            val monitor = window.monitor
+            var monitorScale = 1f
+            if (monitor != null) {
+                val monitorScaleX = FloatArray(1)
+                val monitorScaleY = FloatArray(1)
+                GLFW.glfwGetMonitorContentScale(monitor.handle, monitorScaleX, monitorScaleY)
+                monitorScale = monitorScaleX[0]
+            }
+
             val x = getX().toFloat()
             val y = getY().toFloat()
 
             context.matrices.push()
             context.matrices.translate(0f, 0f, 1000f)
-            context.matrices.scale((1f / scale).toFloat(), (1f / scale).toFloat(), 0f)
+            context.matrices.scale((monitorScale / scale).toFloat(), (monitorScale / scale).toFloat(), 0f)
             context.drawTexture(
                 image,
                 (x - (getCurrent().xhot / scale)).toInt(),
