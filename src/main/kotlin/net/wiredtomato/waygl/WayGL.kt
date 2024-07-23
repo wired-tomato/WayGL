@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory
 @Suppress("unused")
 object WayGL {
     const val MODID = "waygl"
-    private var useVCursor = false
 
     @JvmField
     val LOGGER: Logger = LoggerFactory.getLogger(WayGL::class.java)
@@ -33,7 +32,6 @@ object WayGL {
 
     fun clientInit() {
         Config.HANDLER.load()
-        useVCursor = Config.useVirtualCursor
 
         if (Config.useNativeGlfw) {
             Configuration.GLFW_LIBRARY_NAME.set(Config.nativeGlfwPath)
@@ -62,9 +60,6 @@ object WayGL {
         // Note that this function may only be called *after* glfwInit has been called.
         return isWayland
     }
-
-    @JvmStatic
-    fun useVCursor() = useVCursor && isWayland
 
     fun id(path: String) = Identifier.of(MODID, path)
 }
