@@ -33,5 +33,9 @@ public abstract class MouseMixin {
     }
 
     @WrapOperation(method = { "lockCursor", "unlockCursor" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/InputUtil;setCursorParameters(JIDD)V"))
-    private void cancelCursorSetCursorPosition(long handler, int inputModeValue, double x, double y, Operation<Void> original) { }
+    private void cancelCursorSetCursorPosition(long handler, int inputModeValue, double x, double y, Operation<Void> original) {
+        if (!WayGL.getUseWayland()) {
+            original.call(handler, inputModeValue, x, y);
+        }
+    }
 }
