@@ -35,9 +35,6 @@ class Config {
         val nativeGlfwPath
             get() = HANDLER.instance().nativeGlfwPath
 
-        val useVirtualCursor
-            get() = HANDLER.instance().useVirtualCursor
-
         fun generateYacl(): YetAnotherConfigLib {
             val useNativeGlfwOption = Option.createBuilder<Boolean>()
                 .name(Text.translatable("yacl3.config.waygl:waygl.useNativeGlfw"))
@@ -53,13 +50,6 @@ class Config {
                 .binding("/usr/lib/libglfw.so", { nativeGlfwPath }, { HANDLER.instance().nativeGlfwPath = it })
                 .build()
 
-            val useVirtualCursorOption = Option.createBuilder<Boolean>()
-                .name(Text.translatable("yacl3.config.waygl:waygl.useVirtualCursor"))
-                .flag(OptionFlag.GAME_RESTART)
-                .controller { BooleanControllerBuilder.create(it).yesNoFormatter() }
-                .binding(true, { useVirtualCursor }, { HANDLER.instance().useVirtualCursor = it })
-                .build()
-
             val yacl = YetAnotherConfigLib.createBuilder()
                 .title(Text.translatable("yacl3.config.waygl:waygl.title"))
                 .save { HANDLER.save() }
@@ -68,11 +58,6 @@ class Config {
                         .name(Text.translatable("yacl3.config.waygl:waygl.category.glfw"))
                         .option(useNativeGlfwOption)
                         .option(nativeGlfwPathOption)
-                        .build()
-                ).category(
-                    ConfigCategory.createBuilder()
-                        .name(Text.translatable("yacl3.config.waygl:waygl.category.cursor"))
-                        .option(useVirtualCursorOption)
                         .build()
                 )
 
@@ -85,7 +70,4 @@ class Config {
 
     @SerialEntry
     var nativeGlfwPath = "/usr/lib/libglfw.so"
-
-    @SerialEntry
-    var useVirtualCursor = true
 }
