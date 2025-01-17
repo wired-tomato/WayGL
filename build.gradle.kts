@@ -2,101 +2,131 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("fabric-loom") version "1.6-SNAPSHOT"
-    kotlin("jvm") version "2.0.0"
-    kotlin("plugin.serialization") version "2.0.0"
-    alias(libs.plugins.minotaur)
+    kotlin("jvm") version "2.1.0"
+    kotlin("plugin.serialization") version "2.1.0"
+    id("com.google.devtools.ksp") version "2.1.0-1.0.29" apply false
+    id("fabric-loom") version "1.9-SNAPSHOT" apply false
+    id("net.neoforged.moddev") version "2.0.66-beta" apply false
+    id("com.github.johnrengelman.shadow") version "8.1.1" apply false
     `maven-publish`
 }
 
-group = project.properties["maven_group"]!!
-version = project.properties["mod_version"]!!
-base.archivesName.set(project.properties["archives_base_name"] as String)
-description = "Make GLFW use wayland on supported systems"
-val modid = project.properties["modid"]!! as String
-
 repositories {
     mavenCentral()
-    maven("https://maven.terraformersmc.com/releases")
-    maven("https://api.modrinth.com/maven")
-    maven("https://maven.isxander.dev/releases") {
-        name = "Xander Maven"
-    }
 }
 
-dependencies {
-    minecraft(libs.minecraft)
-    mappings(variantOf(libs.yarn.mappings) { classifier("v2") })
-    modImplementation(libs.fabric.loader)
-    modImplementation(libs.fabric.kt)
+val minecraft_version: String by rootProject.properties
+val parchment_minecraft: String by rootProject.properties
+val parchment_version: String by rootProject.properties
 
-    modImplementation(libs.fabric.api)
-    modImplementation(libs.yacl)
-    modImplementation(libs.mod.menu)
-}
+val mod_id: String by rootProject.properties
+val mod_name: String by rootProject.properties
+val mod_description: String by rootProject.properties
+val mod_version: String by rootProject.properties
+val mod_author: String by rootProject.properties
 
-tasks {
-    processResources {
-        inputs.property("version", project.version)
+val fabric_loader_version: String by rootProject.properties
+val fabric_version: String by rootProject.properties
+val flk_version: String by rootProject.properties
 
-        filesMatching("fabric.mod.json") {
-            expand("version" to project.version)
-        }
-    }
+val minecraft_version_range: String by rootProject.properties
+val neoforge_version: String by rootProject.properties
+val kff_version: String by rootProject.properties
+val kff_loader_version_range: String by rootProject.properties
+val credits: String by rootProject.properties
 
-    val targetJavaVersion = 21
-    withType<JavaCompile>().configureEach {
-        options.encoding = "UTF-8"
-        options.release.set(targetJavaVersion)
-    }
+val yacl_version: String by rootProject.properties
 
-    withType<KotlinCompile>().all {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
-        }
-    }
+val license: String by rootProject.properties
+val java_version: String by rootProject.properties
+
+subprojects {
+    apply(plugin = "java")
+    apply(plugin = "kotlin")
+    apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
+    apply(plugin = "com.google.devtools.ksp")
+    apply(plugin = "maven-publish")
+
+    group = rootProject.property("group").toString()
+    base.archivesName = "$mod_id-${path.replace(":", "-")}"
+    version = mod_version
 
     java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(JavaVersion.toVersion(targetJavaVersion).toString()))
         withSourcesJar()
     }
 
-    jar {
-        from("LICENSE") {
-            rename { "${it}_${project.base.archivesName.get()}"}
+    repositories {
+        mavenCentral()
+        maven("https://maven.wiredtomato.net/snapshots")
+        maven("https://maven.parchmentmc.org")
+        maven("https://maven.isxander.dev/releases") {
+            name = "Xander Maven"
         }
     }
-}
 
-modrinth {
-    token.set(System.getenv("MODRINTH_TOKEN"))
-    projectId.set("waygl")
-    versionNumber.set(project.version.toString())
-    versionType.set("release")
-    uploadFile.set(tasks.remapJar)
-    gameVersions.addAll("1.21")
-    loaders.add("fabric")
     dependencies {
-        required.project("fabric-language-kotlin")
-        required.project("yacl")
-    }
-}
-
-publishing {
-    publications.create<MavenPublication>("waygl") {
-        groupId = project.group.toString()
-        artifactId = project.name.lowercase()
-        version = project.version.toString()
-
-        from(components["java"])
+        if (!projectDir.path.contains("deplatformed")) {
+            implementation(project(":deplatformed-api"))
+            "ksp"(project(":deplatformed-ksp"))
+        }
     }
 
-    repositories {
-        maven("https://maven.wiredtomato.net/releases") {
-            name = "wtRepo"
-            credentials {
-                username = System.getenv("MAVEN_USERNAME")
-                password = System.getenv("MAVEN_PASSWORD")
+    tasks {
+        withType<JavaCompile> {
+            options.encoding = "UTF-8"
+            options.release.set(java_version.toInt())
+        }
+
+        withType<KotlinCompile>().configureEach {
+            compilerOptions {
+                jvmTarget = JvmTarget.fromTarget(java_version)
+            }
+        }
+
+        processResources {
+            val propertyMap = mapOf(
+                "version" to project.version,
+                "mod_id" to mod_id,
+                "mod_name" to mod_name,
+                "mod_description" to mod_description,
+                "mod_author" to mod_author,
+                "license" to license,
+                "fabric_loader_version" to fabric_loader_version,
+                "flk_version" to flk_version,
+                "minecraft_version" to minecraft_version,
+                "java_version" to java_version,
+                "kff_version" to kff_version,
+                "kff_loader_version_range" to kff_loader_version_range,
+                "neoforge_version" to neoforge_version,
+                "minecraft_version_range" to minecraft_version_range,
+                "credits" to credits,
+                "yacl_version" to yacl_version
+            )
+
+            inputs.properties(propertyMap)
+            filesMatching(listOf("${mod_id}.mixins.json", "fabric.mod.json", "${mod_id}.fabric.mixins.json", "META-INF/neoforge.mods.toml")) {
+                expand(propertyMap)
+            }
+        }
+    }
+
+    publishing {
+        publications {
+            create<MavenPublication>(mod_id) {
+                groupId = group.toString()
+                artifactId = mod_id
+                version = if (mod_version.contains("beta")) "$mod_version-SNAPSHOT" else mod_version
+
+                from(components["java"])
+            }
+
+            repositories {
+                maven("https://maven.wiredtomato.net/releases") {
+                    credentials {
+                        username = System.getenv("MAVEN_USERNAME")
+                        password = System.getenv("MAVEN_PASSWORD")
+                    }
+                }
             }
         }
     }

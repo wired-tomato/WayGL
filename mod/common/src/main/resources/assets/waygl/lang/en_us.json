@@ -1,0 +1,6 @@
+{
+  "yacl3.config.waygl:waygl.title":"WayGL Config",
+  "yacl3.config.waygl:waygl.useNativeGlfw": "Use Native GLFW",
+  "yacl3.config.waygl:waygl.nativeGlfwPath": "Native GLFW Path",
+  "yacl3.config.waygl:waygl.category.glfw": "GLFW"
+}
