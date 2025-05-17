@@ -9,7 +9,7 @@ version = "${version}" #mandatory
 displayName = "${mod_name}" #mandatory
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional (see https://docs.neoforged.net/docs/misc/updatechecker/)
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional (displayed in the mod UI)
-logoFile = "${mod_id}.png" #optional
+logoFile = "icon.png" #optional
 credits = "${credits}" #optional
 authors = "${mod_author}" #optional
 description = '''${mod_description}''' #mandatory (Supports multiline text)
@@ -23,7 +23,7 @@ config = "${mod_id}.neoforge.mixins.json"
 [[dependencies.${mod_id}]] #optional
 modId = "neoforge" #mandatory
 type = "required" #mandatory (Can be one of "required", "optional", "incompatible" or "discouraged")
-versionRange = "[${neoforge_version},)" #mandatory
+versionRange = "${neoforge_version_range}" #mandatory
 ordering = "NONE" # The order that this dependency should load in relation to your mod, required to be either 'BEFORE' or 'AFTER' if the dependency is not mandatory
 side = "BOTH" # Side this dependency is applied on - 'BOTH', 'CLIENT' or 'SERVER'
 
@@ -38,6 +38,13 @@ side = "BOTH"
 modId = "kotlinforforge"
 type = "required"
 versionRange = "[${kff_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencied.${mod_id}]]
+modId = "yet_another_config_lib_v3"
+type = "required"
+versionRange = "[${yacl_version},)"
 ordering = "NONE"
 side = "BOTH"
 

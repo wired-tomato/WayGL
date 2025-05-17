@@ -1,9 +1,9 @@
 package net.wiredtomato.waygl
 
-import com.mojang.blaze3d.platform.IconSet
-import net.minecraft.server.packs.PackResources
-import net.wiredtomato.waygl.service.PlatformServiceImpl
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.awt.image.BufferedImage
+import java.io.InputStream
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
@@ -16,22 +16,21 @@ object IconInjector {
     const val APP_ID = "com.mojang.minecraft"
     private const val ICON_NAME = "minecraft.png"
     private const val FILE_NAME = "$APP_ID.desktop"
-    private const val LOCATION = "/assets/${WayGL.MODID}/$FILE_NAME"
+    private const val LOCATION = "/assets/waygl/$FILE_NAME"
     private val injects = mutableListOf<Path>()
+    private val LOGGER: Logger = LoggerFactory.getLogger("WayGL/IconInjector")
 
-    fun inject() {
+    fun inject(minecraftVersion: String) {
         Runtime.getRuntime().addShutdownHook(Thread(IconInjector::uninject))
 
         val stream = IconInjector::class.java.getResourceAsStream(LOCATION)
         val location = getDesktopFileLoc()
 
-        val version = PlatformServiceImpl.getMinecraftVersion()
-
         injectFile(
             location,
             String.format(stream?.readAllBytes()?.toString(Charsets.UTF_8) ?: "null",
-                version,
-                ICON_NAME.substring(0, ICON_NAME.lastIndexOf("."))
+                minecraftVersion,
+                ICON_NAME.take(ICON_NAME.lastIndexOf("."))
             ).toByteArray(StandardCharsets.UTF_8)
         )
     }
@@ -46,17 +45,15 @@ object IconInjector {
         updateIconSys()
     }
 
-    fun setIcon(resourcePack: PackResources, icons: IconSet) {
+    fun setIcon(icons: Collection<InputStream>) {
         val result = {
-            val suppliers = icons.getStandardIcons(resourcePack)
-
-            suppliers.forEach {
-                val image: BufferedImage = ImageIO.read(it.get())
+            icons.forEach {
+                val image: BufferedImage = ImageIO.read(it)
                 val target: Path = getIconFileLoc(
                     image.width,
                     image.height
                 )
-                injectFile(target, it.get().readAllBytes())
+                injectFile(target, it.readAllBytes())
             }
         }.runCatching {
             this()
@@ -77,8 +74,8 @@ object IconInjector {
         }
 
         if (result.isFailure) {
-            WayGL.LOGGER.error("Failed to inject file: $target")
-            WayGL.LOGGER.error(result.exceptionOrNull().toString())
+            LOGGER.error("Failed to inject file: $target")
+            LOGGER.error(result.exceptionOrNull().toString())
         }
     }
 

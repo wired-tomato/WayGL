@@ -4,6 +4,7 @@ plugins {
     id("net.neoforged.moddev")
 }
 
+val minecraft_versions = project.properties["minecraft_versions"].toString().split(',')
 val parchment_minecraft: String by rootProject.properties
 val parchment_version: String by rootProject.properties
 val neoforge_version: String by rootProject.properties
@@ -77,6 +78,20 @@ neoForge {
         create(mod_id) {
             sourceSet(sourceSets["main"])
         }
+    }
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = "waygl"
+    versionNumber = version.toString()
+    versionType = "release"
+    gameVersions = minecraft_versions
+    loaders.set(listOf("neoforge"))
+    uploadFile = tasks.jar.get()
+    dependencies {
+        required.project("kotlin-for-forge")
+        required.project("yacl")
     }
 }
 

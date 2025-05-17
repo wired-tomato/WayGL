@@ -11,7 +11,7 @@ val parchment_version: String by rootProject.properties
 val yacl_version: String by rootProject.properties
 
 neoForge {
-    setNeoFormVersion(neo_form_version)
+    neoFormVersion = neo_form_version
 
     val at = file("src/main/resources/META-INF/accesstransformer.cfg")
     if (at.exists()) {
@@ -31,7 +31,7 @@ dependencies {
 
     compileOnly("org.ow2.asm:asm-tree:9.6")
 
-    implementation("dev.isxander:yet-another-config-lib:${yacl_version}-neoforge")
+    compileOnly("dev.isxander:yet-another-config-lib:${yacl_version}-neoforge")
 }
 
 sourceSets.main {

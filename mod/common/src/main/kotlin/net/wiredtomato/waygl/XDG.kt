@@ -1,12 +1,10 @@
 package net.wiredtomato.waygl
 
-import org.apache.commons.io.IOUtils
 import java.io.IOException
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-
 
 /**
  * Port of [moehreag/wayland_fixes](https://github.com/moehreag/wayland-fixes) XDGPathResolver
@@ -40,8 +38,8 @@ object XDG {
 
         try {
             val p = builder.start()
-            themeName = IOUtils.toString(p.inputStream, StandardCharsets.UTF_8).split("'")[1]
             p.waitFor()
+            themeName = p.inputStream.readBytes().toString(Charsets.UTF_8).split("'")[1]
         } catch (e: IOException) {
             themeName = "default"
         } catch (e: InterruptedException) {
@@ -101,8 +99,8 @@ object XDG {
 
         try {
             val p = builder.start()
-            size = IOUtils.toString(p.inputStream, StandardCharsets.UTF_8).split("\n")[0].toInt()
             p.waitFor()
+            size = p.inputStream.readBytes().toString(Charsets.UTF_8).split("\n")[0].toInt()
         } catch (e: IOException) {
             size = 24
         } catch (e: InterruptedException) {

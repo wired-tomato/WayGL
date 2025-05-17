@@ -2,12 +2,12 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.1.0"
-    kotlin("plugin.serialization") version "2.1.0"
-    id("com.google.devtools.ksp") version "2.1.0-1.0.29" apply false
-    id("fabric-loom") version "1.9-SNAPSHOT" apply false
-    id("net.neoforged.moddev") version "2.0.66-beta" apply false
-    id("com.github.johnrengelman.shadow") version "8.1.1" apply false
+    kotlin("jvm") version "2.1.20"
+    kotlin("plugin.serialization") version "2.1.20"
+    id("com.google.devtools.ksp") version "2.1.20-1.0.32" apply false
+    id("fabric-loom") version "1.10-SNAPSHOT" apply false
+    id("net.neoforged.moddev") version "2.0.80" apply false
+    id("com.modrinth.minotaur") version "2.+" apply false
     `maven-publish`
 }
 
@@ -15,7 +15,9 @@ repositories {
     mavenCentral()
 }
 
-val minecraft_version: String by rootProject.properties
+val minecraft_version: String by project.properties
+val minecraft_version_major: String by project.properties
+val minecraft_versions = project.properties["minecraft_versions"].toString().split(',')
 val parchment_minecraft: String by rootProject.properties
 val parchment_version: String by rootProject.properties
 
@@ -31,6 +33,7 @@ val flk_version: String by rootProject.properties
 
 val minecraft_version_range: String by rootProject.properties
 val neoforge_version: String by rootProject.properties
+val neoforge_version_range: String by rootProject.properties
 val kff_version: String by rootProject.properties
 val kff_loader_version_range: String by rootProject.properties
 val credits: String by rootProject.properties
@@ -40,15 +43,20 @@ val yacl_version: String by rootProject.properties
 val license: String by rootProject.properties
 val java_version: String by rootProject.properties
 
+val loaderPaths = listOf(":fabric", ":neoforge")
+
 subprojects {
     apply(plugin = "java")
     apply(plugin = "kotlin")
     apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
     apply(plugin = "com.google.devtools.ksp")
     apply(plugin = "maven-publish")
+    if (loaderPaths.contains(project.path)) {
+        apply(plugin = "com.modrinth.minotaur")
+    }
 
     group = rootProject.property("group").toString()
-    base.archivesName = "$mod_id-${path.replace(":", "-")}"
+    base.archivesName = "$mod_id-${path.replace(":", "")}"
     version = mod_version
 
     java {
@@ -57,8 +65,10 @@ subprojects {
 
     repositories {
         mavenCentral()
-        maven("https://maven.wiredtomato.net/snapshots")
-        maven("https://maven.parchmentmc.org")
+        maven("https://maven.parchmentmc.org") {
+            name = "ParchmentMC"
+        }
+
         maven("https://maven.isxander.dev/releases") {
             name = "Xander Maven"
         }
@@ -94,10 +104,12 @@ subprojects {
                 "fabric_loader_version" to fabric_loader_version,
                 "flk_version" to flk_version,
                 "minecraft_version" to minecraft_version,
+                "minecraft_version_major" to minecraft_version_major,
                 "java_version" to java_version,
                 "kff_version" to kff_version,
                 "kff_loader_version_range" to kff_loader_version_range,
                 "neoforge_version" to neoforge_version,
+                "neoforge_version_range" to neoforge_version_range,
                 "minecraft_version_range" to minecraft_version_range,
                 "credits" to credits,
                 "yacl_version" to yacl_version

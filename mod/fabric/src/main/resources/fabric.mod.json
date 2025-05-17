@@ -12,7 +12,7 @@
         "sources": "https://github.com/wired-tomato/WayGL"
     },
     "license": "${license}",
-    "icon": "assets/waygl/${mod_id}.png",
+    "icon": "icon.png",
     "environment": "*",
     "entrypoints": {
         "client": [
@@ -36,7 +36,8 @@
         "fabricloader": ">=${fabric_loader_version}",
         "fabric-api": "*",
         "fabric-language-kotlin": ">=${flk_version}",
-        "minecraft": "~${minecraft_version}",
+        "yet_another_config_lib_v3": ">=${yacl_version}",
+        "minecraft": ">=${minecraft_version_major}",
         "java": ">=${java_version}"
     },
     "suggests": {

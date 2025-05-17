@@ -1,13 +1,11 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "template.mixin",
-  "refmap": "${mod_id}.refmap.json",
+  "package": "net.wiredtomato.waygl.mixin",
+  "refmap": "${mod_id}.fabric.refmap.json",
   "compatibilityLevel": "JAVA_21",
   "mixins": [],
-  "client": [
-    "net.wiredtomato.waygl.mixin.MixinTitleScreen"
-  ],
+  "client": [],
   "server": [],
   "injectors": {
     "defaultRequire": 1

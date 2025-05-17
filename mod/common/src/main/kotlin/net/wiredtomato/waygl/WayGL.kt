@@ -19,13 +19,13 @@ object WayGL {
     const val MODID = "waygl"
 
     @JvmField
-    val LOGGER: Logger = LoggerFactory.getLogger(WayGL::class.java)
-
-    @JvmStatic
-    val platform: Int by lazy { GLFW.glfwGetPlatform() }
+    val LOGGER: Logger = LoggerFactory.getLogger("WayGL")
 
     @JvmStatic
     val useWayland: Boolean by lazy { GLFW.glfwPlatformSupported(GLFW.GLFW_PLATFORM_WAYLAND) }
+
+    @JvmStatic
+    val platform: Int by lazy { GLFW.glfwGetPlatform() }
 
     @JvmStatic
     val isWayland: Boolean by lazy { platform == GLFW.GLFW_PLATFORM_WAYLAND }

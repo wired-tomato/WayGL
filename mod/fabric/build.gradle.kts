@@ -5,6 +5,7 @@ plugins {
 }
 
 val minecraft_version: String by project.properties
+val minecraft_versions = project.properties["minecraft_versions"].toString().split(',')
 val parchment_minecraft: String by rootProject.properties
 val parchment_version: String by rootProject.properties
 val fabric_loader_version: String by rootProject.properties
@@ -66,6 +67,21 @@ loom {
             ideConfigGenerated(true)
             runDir("runs/server")
         }
+    }
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = "waygl"
+    versionNumber = version.toString()
+    versionType = "release"
+    gameVersions = minecraft_versions
+    loaders.set(listOf("fabric"))
+    uploadFile = tasks.jar.get()
+    dependencies {
+        required.project("fabric-language-kotlin")
+        required.project("fabric-api")
+        required.project("yacl")
     }
 }
 

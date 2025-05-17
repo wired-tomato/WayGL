@@ -44,7 +44,7 @@ class Config {
                 .build()
 
             val nativeGlfwPathOption = Option.createBuilder<String>()
-                .name(Component.translatable("yacl3.config.waygl:waygl.useNativeGlfw"))
+                .name(Component.translatable("yacl3.config.waygl:waygl.nativeGlfwPath"))
                 .flag(OptionFlag.GAME_RESTART)
                 .controller(StringControllerBuilder::create)
                 .binding("/usr/lib/libglfw.so", { nativeGlfwPath }, { HANDLER.instance().nativeGlfwPath = it })

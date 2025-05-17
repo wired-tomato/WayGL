@@ -6,6 +6,6 @@ import net.wiredtomato.waygl.config.Config
 
 object ModMenuIntegration: ModMenuModMenuCompat() {
     override fun getModConfigScreenFactory(): ConfigScreenFactory<*> {
-        return ConfigScreenFactory { parent -> Config.Companion.YACL.generateScreen(parent) }
+        return ConfigScreenFactory { parent -> Config.YACL.generateScreen(parent) }
     }
 }
