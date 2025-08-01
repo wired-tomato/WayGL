@@ -77,7 +77,8 @@ modrinth {
     versionType = "release"
     gameVersions = minecraft_versions
     loaders.set(listOf("fabric"))
-    uploadFile = tasks.jar.get()
+    // uploadFile = tasks.jar.get()
+    uploadFile = tasks.remapJar.get()
     dependencies {
         required.project("fabric-language-kotlin")
         required.project("fabric-api")
