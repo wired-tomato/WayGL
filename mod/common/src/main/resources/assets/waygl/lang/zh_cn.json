@@ -1,0 +1,10 @@
+{
+  "yacl3.config.waygl:waygl.title":"WayGL 配置",
+  "yacl3.config.waygl:waygl.useNativeGlfw": "使用本地GLFW",
+  "yacl3.config.waygl:waygl.nativeGlfwPath": "本地GLFW路径",
+  "yacl3.config.waygl:waygl.category.glfw": "GLFW",
+  "waygl.warning.early_window_active": "预加载窗口已启用",
+  "waygl.warning.early_window_active.desc": "因窗口在Mixin注入之前就已初始化\n导致WayGL无法为GLFW启用Wayland支持 \n在FML配置中禁用 \"earlyWindowControl\" \n即可解决此问题。",
+  "waygl.warning.early_window_active.continue": "暂不禁用预加载窗口并继续",
+  "waygl.warning.early_window_active.disable": "禁用预加载窗口并关闭游戏"
+}
