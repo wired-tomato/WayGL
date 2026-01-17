@@ -1,0 +1,41 @@
+{
+    "schemaVersion": 1,
+    "id": "${modId}",
+    "version": "${version}",
+    "name": "${modName}",
+    "description": "${modDescription}",
+    "authors": [
+        "${author}"
+    ],
+    "contact": {
+        "homepage": "https://modrinth.com/mod/waygl",
+        "sources": "https://github.com/wired-tomato/WayGL"
+    },
+    "license": "${license}",
+    "icon": "icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "client": [
+            {
+                "value": "net.wiredtomato.waygl.fabric.FabricWayGL"
+            }
+        ],
+        "modmenu": [
+            {
+                "value": "net.wiredtomato.waygl.fabric.ModMenuIntegration"
+            }
+        ]
+    },
+    "mixins": [
+        "${modId}.mixins.json",
+        "${modId}.fabric.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=${fabricLoaderVersion}",
+        "fabric-api": "*",
+        "cloth-config": ">=${clothConfigVersion}",
+        "minecraft": ">=${minecraftVersionMajor}",
+        "java": ">=${javaVersion}"
+    }
+}
+  

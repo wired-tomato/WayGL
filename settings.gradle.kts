@@ -11,6 +11,7 @@ pluginManagement {
 
             filter {
                 includeGroup("net.fabricmc")
+                includeGroup("net.fabricmc.unpick")
                 includeGroup("fabric-loom")
             }
         }
@@ -26,21 +27,26 @@ pluginManagement {
                 includeGroupAndSubgroups("org.spongepowered")
             }
         }
+
+        maven("https://maven.minecraftforge.net/") {
+            name = "MinecraftForge"
+        }
     }
 }
 
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+include(":core")
+
+fun includeVersion(version: String, disableFabric: Boolean = false, disableNeoForge: Boolean = false) {
+    include("mod:$version")
+    include("mod:$version:common")
+    if (!disableFabric) include("mod:$version:fabric")
+    if (!disableNeoForge) include("mod:$version:neoforge")
 }
 
-include("deplatformed-api", "deplatformed-ksp")
-project(":deplatformed-api").projectDir = file("deplatformed/api")
-project(":deplatformed-ksp").projectDir = file("deplatformed/ksp")
+//disable based on current version
+//also change java target in :core
+includeVersion("1.21.9-11")
+//includeVersion("1.21.x-8")
+//includeVersion("1.20.x", disableNeoForge = true)
 
-include("common", "fabric", "neoforge")
-project(":common").projectDir = file("mod/common")
-project(":fabric").projectDir = file("mod/fabric")
-project(":neoforge").projectDir = file("mod/neoforge")
-
-rootProject.name = "WayGL"
-
+rootProject.name = "waygl"

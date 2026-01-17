@@ -1,0 +1,10 @@
+{
+  "waygl.config.title":"WayGL Config",
+  "waygl.config.category.glfw": "GLFW",
+  "waygl.config.category.glfw.native": "Use Native GLFW",
+  "waygl.config.category.glfw.path": "Native GLFW Path",
+  "waygl.warning.early_window_active": "Early Window is Active",
+  "waygl.warning.early_window_active.desc": "Because of this, WayGL is unable to enable wayland for use by GLFW as the window is initialized prior to mixin injections, disabling \"earlyWindowControl\" in FML config will fix this issue.",
+  "waygl.warning.early_window_active.continue": "Continue Anyways",
+  "waygl.warning.early_window_active.disable": "Disable & Close Game"
+}
