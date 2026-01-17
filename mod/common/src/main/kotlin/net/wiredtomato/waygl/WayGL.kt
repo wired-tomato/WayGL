@@ -22,7 +22,10 @@ object WayGL {
     val LOGGER: Logger = LoggerFactory.getLogger("WayGL")
 
     @JvmStatic
-    val useWayland: Boolean by lazy { GLFW.glfwPlatformSupported(GLFW.GLFW_PLATFORM_WAYLAND) }
+    val useWayland: Boolean by lazy {
+        (GLFW.glfwPlatformSupported(GLFW.GLFW_PLATFORM_WAYLAND)
+                && (System.getenv("XDG_SESSION_TYPE")?.lowercase() ?: "").startsWith("wayland"))
+    }
 
     @JvmStatic
     val platform: Int by lazy { GLFW.glfwGetPlatform() }
