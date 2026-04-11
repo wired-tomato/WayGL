@@ -1,7 +1,3 @@
-import gradle.kotlin.dsl.accessors._65a83017089d65cb5bffe24cf4d9e02a.compileJava
-import gradle.kotlin.dsl.accessors._65a83017089d65cb5bffe24cf4d9e02a.compileOnly
-import gradle.kotlin.dsl.accessors._65a83017089d65cb5bffe24cf4d9e02a.modrinth
-import gradle.kotlin.dsl.accessors._65a83017089d65cb5bffe24cf4d9e02a.processResources
 import org.slf4j.event.Level
 
 plugins {

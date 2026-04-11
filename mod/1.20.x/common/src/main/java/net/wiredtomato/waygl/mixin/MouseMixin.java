@@ -1,10 +1,7 @@
 package net.wiredtomato.waygl.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
-import net.wiredtomato.waygl.WayGL;
 import net.wiredtomato.waygl.core.Loader;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
@@ -21,22 +18,17 @@ public abstract class MouseMixin {
 
     @Shadow @Final private Minecraft minecraft;
 
-    @Inject(method = { "grabMouse", "releaseMouse" }, at = @At(value = "FIELD", target = "Lnet/minecraft/client/MouseHandler;mouseGrabbed:Z", ordinal = 1, shift = At.Shift.AFTER))
+    @Inject(method = { "grabMouse", "releaseMouse" }, at = @At(value = "FIELD", target = "Lnet/minecraft/client/MouseHandler;mouseGrabbed:Z", ordinal = 1, shift = At.Shift.AFTER), cancellable = true)
     private void onLockCursor(CallbackInfo ci) {
-        if (Loader.useWayland()) {
-            var windowHandle = minecraft.getWindow().getWindow();
-            if (isMouseGrabbed()) {
-                GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
-            } else {
-                GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
-            }
-        }
-    }
+        if (!Loader.useWayland()) return;
 
-    @WrapOperation(method = { "grabMouse", "releaseMouse" }, at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/InputConstants;grabOrReleaseMouse(JIDD)V"))
-    private void cancelCursorSetCursorPosition(long handler, int inputModeValue, double x, double y, Operation<Void> original) {
-        if (!Loader.useWayland()) {
-            original.call(handler, inputModeValue, x, y);
+        var windowHandle = minecraft.getWindow().getWindow();
+        if (isMouseGrabbed()) {
+            GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+        } else {
+            GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
         }
+
+        ci.cancel();
     }
 }

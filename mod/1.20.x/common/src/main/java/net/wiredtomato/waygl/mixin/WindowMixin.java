@@ -22,35 +22,35 @@ import static org.lwjgl.glfw.GLFW.*;
 public abstract class WindowMixin {
 	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lorg/lwjgl/glfw/GLFW;glfwDefaultWindowHints()V", shift = At.Shift.AFTER, remap = false))
 	private void addWindowHints(WindowEventHandler windowEventHandler, ScreenManager monitorTracker, DisplayData windowSettings, String string, String string2, CallbackInfo ci) {
-		if (Loader.isWayland()) {
-			glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_FALSE);
-			IconInjector.inject(PlatformService.IMPL.getMinecraftVersionString());
-			glfwWindowHintString(GLFW_WAYLAND_APP_ID, IconInjector.APP_ID);
-		}
-	}
+        if (!Loader.isWayland()) return;
+
+        glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_FALSE);
+        IconInjector.inject(PlatformService.IMPL.getMinecraftVersionString());
+        glfwWindowHintString(GLFW_WAYLAND_APP_ID, IconInjector.APP_ID);
+    }
 
 	@Inject(method = "setIcon", at = @At("HEAD"), cancellable = true)
 	private void setIcon(PackResources resourcePack, IconSet icons, CallbackInfo ci) {
-		if (Loader.isWayland()) {
-			List<IoSupplier<InputStream>> iconStreamSuppliers = List.of();
+        if (!Loader.isWayland()) return;
 
+        List<IoSupplier<InputStream>> iconStreamSuppliers = List.of();
+
+        try {
+            iconStreamSuppliers = icons.getStandardIcons(resourcePack);
+        } catch (IOException e) {
+            WayGL.LOGGER.error("Failed to load icons!", e);
+        }
+
+        var iconStreams = iconStreamSuppliers.stream().map((it) -> {
             try {
-                iconStreamSuppliers = icons.getStandardIcons(resourcePack);
+                return it.get();
             } catch (IOException e) {
-                WayGL.LOGGER.error("Failed to load icons!", e);
+                WayGL.LOGGER.error("Failed to load icon!", e);
+                return null;
             }
+        }).toList();
 
-			var iconStreams = iconStreamSuppliers.stream().map((it) -> {
-				try {
-					return it.get();
-				} catch (IOException e) {
-					WayGL.LOGGER.error("Failed to load icon!", e);
-					return null;
-				}
-			}).toList();
-
-            IconInjector.setIcon(iconStreams);
-			ci.cancel();
-		}
-	}
+        IconInjector.setIcon(iconStreams);
+        ci.cancel();
+    }
 }

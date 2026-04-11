@@ -1,8 +1,5 @@
 package net.wiredtomato.waygl.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.wiredtomato.waygl.core.Loader;
@@ -22,22 +19,17 @@ public abstract class MouseMixin {
 
     @Shadow @Final private Minecraft minecraft;
 
-    @Inject(method = { "grabMouse", "releaseMouse" }, at = @At(value = "FIELD", target = "Lnet/minecraft/client/MouseHandler;mouseGrabbed:Z", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
+    @Inject(method = { "grabMouse", "releaseMouse" }, at = @At(value = "FIELD", target = "Lnet/minecraft/client/MouseHandler;mouseGrabbed:Z", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER), cancellable = true)
     private void onLockCursor(CallbackInfo ci) {
-        if (Loader.useWayland()) {
-            var windowHandle = minecraft.getWindow().handle();
-            if (isMouseGrabbed()) {
-                GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
-            } else {
-                GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
-            }
-        }
-    }
+        if (!Loader.useWayland()) return;
 
-    @WrapOperation(method = "grabMouse", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/InputConstants;grabOrReleaseMouse(Lcom/mojang/blaze3d/platform/Window;IDD)V"))
-    private void cancelCursorSetCursorPosition(Window window, int inputMode, double mouseX, double mouseY, Operation<Void> original) {
-        if (!Loader.useWayland()) {
-            original.call(window, inputMode, mouseX, mouseY);
+        var windowHandle = minecraft.getWindow().handle();
+        if (isMouseGrabbed()) {
+            GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+        } else {
+            GLFW.glfwSetInputMode(windowHandle, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
         }
+
+        ci.cancel();
     }
 }

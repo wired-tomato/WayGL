@@ -19,28 +19,28 @@ import static org.lwjgl.glfw.GLFW.*;
 public abstract class WindowMixin {
 	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lorg/lwjgl/glfw/GLFW;glfwDefaultWindowHints()V", shift = At.Shift.AFTER, remap = false, unsafe = true))
 	private void addWindowHints(WindowEventHandler eventHandler, ScreenManager screenManager, DisplayData displayData, String preferredFullscreenVideoMode, String title, CallbackInfo ci) {
-		if (Loader.useWayland()) {
-			glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_FALSE);
-			IconInjector.inject(PlatformService.IMPL.getMinecraftVersionString());
-			GLFW.glfwWindowHintString(GLFW_WAYLAND_APP_ID, IconInjector.APP_ID);
-		}
-	}
+        if (!Loader.useWayland()) return;
+
+        glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_FALSE);
+        IconInjector.inject(PlatformService.IMPL.getMinecraftVersionString());
+        GLFW.glfwWindowHintString(GLFW_WAYLAND_APP_ID, IconInjector.APP_ID);
+    }
 
 	@Inject(method = "setIcon", at = @At("HEAD"), cancellable = true)
 	private void setIcon(PackResources packResources, IconSet iconSet, CallbackInfo ci) {
-		if (Loader.useWayland()) {
-            try {
-                IconInjector.setIcon(iconSet.getStandardIcons(packResources).stream().map(it -> {
-                    try {
-                        return it.get();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).toList());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            ci.cancel();
-		}
-	}
+        if (!Loader.useWayland()) return;
+
+        try {
+            IconInjector.setIcon(iconSet.getStandardIcons(packResources).stream().map(it -> {
+                try {
+                    return it.get();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }).toList());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        ci.cancel();
+    }
 }
