@@ -13,9 +13,12 @@ import java.util.List;
 /*
  * Implementation from Sodium (https://github.com/CaffeineMC/sodium/blob/dev/common/src/boot/java/net/caffeinemc/mods/sodium/client/compatibility/environment/probe/GraphicsAdapterProbe.java)
  */
-public class GraphicsAdapterProbe {
+public final class GraphicsAdapterProbe {
     private static final Logger LOGGER = LoggerFactory.getLogger("WayGL/NvidiaWorkaround");
+
     private static List<LinuxAdapterInfo> CACHE = null;
+
+    private GraphicsAdapterProbe() {}
 
     public static List<LinuxAdapterInfo> findLinuxAdapters() {
         if (CACHE != null) {
@@ -25,11 +28,7 @@ public class GraphicsAdapterProbe {
         var results = new ArrayList<LinuxAdapterInfo>();
 
         try {
-            var devices = Files.list(Paths.get("/sys/bus/pci/devices/")).iterator();
-
-            while (devices.hasNext()) {
-                var devicePath = devices.next();
-
+            for (var devicePath : Files.list(Paths.get("/sys/bus/pci/devices/")).toList()) {
                 // 0x030000 = VGA compatible controller
                 // 0x030200 = 3D controller (GPUs with no inputs attached, e.g. hybrid graphics laptops)
                 var deviceClass = Files.readString(devicePath.resolve("class")).trim();

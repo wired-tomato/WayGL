@@ -8,7 +8,9 @@ import java.util.List;
 /**
  * From [moehreag/wayland_fixes](https://github.com/moehreag/wayland-fixes) XDGPathResolver
  */
-public class XDG {
+public final class XDGUtils {
+    private XDGUtils() {}
+
     private static Path getHome() {
         var home = System.getenv().getOrDefault("HOME", System.getProperty("user.home"));
         if (home == null || home.isEmpty()) {

@@ -22,7 +22,7 @@ public abstract class WindowMixin {
         if (!Loader.useWayland()) return;
 
         glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_FALSE);
-        IconInjector.inject(PlatformService.IMPL.getMinecraftVersionString());
+        IconInjector.getInstance().inject(PlatformService.IMPL.getMinecraftVersionString());
         GLFW.glfwWindowHintString(GLFW_WAYLAND_APP_ID, IconInjector.APP_ID);
     }
 
@@ -31,7 +31,7 @@ public abstract class WindowMixin {
         if (!Loader.useWayland()) return;
 
         try {
-            IconInjector.setIcon(iconSet.getStandardIcons(packResources).stream().map(it -> {
+            IconInjector.getInstance().setIcon(iconSet.getStandardIcons(packResources).stream().map(it -> {
                 try {
                     return it.get();
                 } catch (IOException e) {
