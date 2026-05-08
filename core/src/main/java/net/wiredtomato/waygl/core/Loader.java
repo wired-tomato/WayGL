@@ -10,10 +10,12 @@ import org.lwjgl.system.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Loader {
-    public static final Logger LOGGER = LoggerFactory.getLogger("WayGL/Loader");
+public final class Loader {
+    private static final Logger LOGGER = LoggerFactory.getLogger("WayGL/Loader");
 
     private static Boolean useWayland;
+
+    private Loader() {}
 
     public static void load(String nativeGLFWPath) {
         if (nativeGLFWPath != null) {
@@ -44,7 +46,6 @@ public class Loader {
 
             useWayland = GLFW.glfwPlatformSupported(GLFW.GLFW_PLATFORM_WAYLAND) && sessionType.toLowerCase().startsWith("wayland");
         }
-
 
         return useWayland;
     }

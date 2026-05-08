@@ -2,9 +2,11 @@ package net.wiredtomato.waygl.core.os;
 
 import org.lwjgl.system.*;
 
-public class Libc {
+public final class Libc {
     private static final SharedLibrary LIBRARY = APIUtil.apiCreateLibrary("libc.so.6");
     private static final long PFN_setenv = APIUtil.apiGetFunctionAddress(LIBRARY, "setenv");
+
+    private Libc() {}
 
     public static void setenv(String name, String value) {
         try (var stack = MemoryStack.stackPush()) {

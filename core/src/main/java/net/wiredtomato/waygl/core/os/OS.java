@@ -7,6 +7,7 @@ public enum OS {
     MAC,
     LINUX,
     UNKNOWN;
+
     public static OS current() {
         if (SystemUtils.IS_OS_WINDOWS) {
             return OS.WIN;

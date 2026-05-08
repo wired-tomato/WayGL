@@ -5,8 +5,10 @@ import net.wiredtomato.waygl.core.os.OS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class NvidiaWorkaround {
+public final class NvidiaWorkaround {
     private static final Logger LOGGER = LoggerFactory.getLogger("WayGL/NvidiaWorkaround");
+
+    private NvidiaWorkaround() {}
 
     public static void apply() {
         LOGGER.warn("Applying workaround: Prevent NVIDIA OpenGL driver from using broken optimization (NVIDIA_THREADED_OPTIMIZATIONS");

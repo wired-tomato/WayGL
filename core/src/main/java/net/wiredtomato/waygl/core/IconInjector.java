@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -17,27 +18,37 @@ import java.util.List;
 /**
  * From [moehreag/wayland_fixes](https://github.com/moehreag/wayland-fixes) DesktopFileInjector
  */
-public class IconInjector {
-    public static final String APP_ID = "com.mojang.minecraft";
-    private static final String ICON_NAME = "minecraft.png";
-    private static final String FILE_NAME = APP_ID + ".desktop";
-    private static final String LOCATION = "/assets/waygl/" + FILE_NAME;
-    private static final List<Path> injects = new ArrayList<>();
+public final class IconInjector {
     private static final Logger LOGGER = LoggerFactory.getLogger("WayGL/IconInjector");
 
-    public static void inject(String minecraftVersion) {
-        Runtime.getRuntime().addShutdownHook(new Thread(IconInjector::uninject));
+    private static final IconInjector INSTANCE = new IconInjector();
 
-        try (var stream = IconInjector.class.getResourceAsStream(LOCATION)) {
+    public static final String APP_ID = "com.mojang.minecraft";
+
+    private static final String ICON_FILE_NAME = "minecraft.png";
+    private static final String DESKTOP_FILE_NAME = APP_ID + ".desktop";
+    private static final String DESKTOP_FILE_RESOURCE = "/assets/waygl/" + DESKTOP_FILE_NAME;
+
+    private final List<Path> injected = new ArrayList<>();
+
+    private IconInjector() {}
+
+    public void inject(String minecraftVersion) {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            uninjectFiles();
+
+            updateIcons();
+        }));
+
+        try (var stream = IconInjector.class.getResourceAsStream(DESKTOP_FILE_RESOURCE)) {
             if (stream == null) {
-                LOGGER.error("Icon resource not found: " + LOCATION);
+                LOGGER.error("Icon resource not found: " + DESKTOP_FILE_RESOURCE);
                 return;
             }
 
             var location = getDesktopFileLocation();
 
-            byte[] bytes = stream.readAllBytes();
-            var data = new String(bytes, StandardCharsets.UTF_8);
+            var data = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
             var formatted = String.format(data, minecraftVersion, "minecraft");
 
             injectFile(location, formatted.getBytes(StandardCharsets.UTF_8));
@@ -46,61 +57,71 @@ public class IconInjector {
         }
     }
 
-    public static void setIcon(Collection<InputStream> icons) {
+    public void setIcon(Collection<InputStream> icons) {
         try {
             for (var icon : icons) {
                 if (icon == null) continue;
 
-                var image = ImageIO.read(icon);
+                var iconData = icon.readAllBytes();
+
+                var image = ImageIO.read(new ByteArrayInputStream(iconData));
                 var target = getIconFileLocation(image.getWidth(), image.getHeight());
-                injectFile(target, icon.readAllBytes());
+
+                injectFile(target, iconData);
             }
         } catch (IOException e) {
             LOGGER.error("Failed to set icon: ", e);
+            return;
         }
+
+        updateIcons();
     }
 
-    private static void injectFile(Path target, byte[] data) {
+    private void injectFile(Path target, byte[] data) {
         try {
             Files.createDirectories(target.getParent());
             Files.write(target, data);
+            injected.add(target);
         } catch (IOException e) {
             LOGGER.error("Failed to create file: {}", target);
             LOGGER.error(e.toString());
         }
     }
 
-    private static void uninject() {
-        injects.forEach((path) -> {
+    private void uninjectFiles() {
+        for (var path : injected) {
             try {
                 Files.deleteIfExists(path);
             } catch (IOException e) {
                 LOGGER.error("Failed to delete file: {}", path, e);
             }
-        });
+        }
+    }
+
+    public static IconInjector getInstance() {
+        return INSTANCE;
     }
 
     private static Path getIconFileLocation(int width, int height) {
-        return XDG.getUserDataLocation()
+        return XDGUtils.getUserDataLocation()
                 .resolve("icons/hicolor")
-                .resolve("${width}x$height")
+                .resolve(width + "x" + height)
                 .resolve("apps")
-                .resolve(ICON_NAME);
+                .resolve(ICON_FILE_NAME);
     }
 
     private static Path getDesktopFileLocation() {
-        return XDG.getUserDataLocation()
+        return XDGUtils.getUserDataLocation()
                 .resolve("applications")
-                .resolve(FILE_NAME);
+                .resolve(DESKTOP_FILE_NAME);
     }
 
     private static void updateIcons() {
-        var proc = new ProcessBuilder("xdg-icon-resource", "forceupdate");
-
         try {
-            proc.start();
+            var xdgUpdateTask = new ProcessBuilder("xdg-icon-resource", "forceupdate");
+            xdgUpdateTask.start();
         } catch (IOException e) {
-            LOGGER.error("Failed to update icons with xdg-icon-resource", e);
+            LOGGER.error("Failed to update icon theme", e);
         }
     }
 }
