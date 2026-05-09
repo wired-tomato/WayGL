@@ -1,5 +1,5 @@
 plugins {
-    id("fabric-loom")
+    id("net.fabricmc.fabric-loom")
     id("com.modrinth.minotaur")
 }
 
@@ -21,14 +21,8 @@ val common = project.parent!!.project("common")
 dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
 
-    mappings(loom.layered {
-        officialMojangMappings()
-        if (!disableParchment) parchment("org.parchmentmc.data:parchment-$parchmentMinecraft:$parchmentVersion@zip")
-    })
-
-
-    modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
+    implementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
+    implementation("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
 
     compileOnly(core)
     compileOnly(common)
@@ -44,7 +38,8 @@ modrinth {
     versionType = "release"
     gameVersions = minecraftVersions
     loaders.set(listOf("fabric"))
-    uploadFile = tasks.remapJar.get()
+
+    uploadFile = tasks.jar.get()
     dependencies {
         modDependencies.forEach {
             required.project(it)
