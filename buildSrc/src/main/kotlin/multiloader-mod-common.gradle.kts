@@ -4,10 +4,12 @@ plugins {
 
 val mcVersion = property("minecraftVersion") as String
 val neoformVersion: String by properties
-val parchmentVersion: String by properties
-val parchmentMinecraft = property("parchmentMinecraft").let {
+val parchmentVersion: String = (findProperty("parchmentVersion") as? String) ?: "unspecified"
+val parchmentMinecraft = findProperty("parchmentMinecraft").let {
     if (it !is String || it.isBlank()) mcVersion else it
 }
+
+val disableParchment = (findProperty("disableParchment") as String?).toBoolean()
 
 val core = project(":core")
 
@@ -23,9 +25,11 @@ neoForge {
         accessTransformers.from(at)
     }
 
-    parchment {
-        minecraftVersion = parchmentMinecraft
-        mappingsVersion = parchmentVersion
+    if (!disableParchment && parchmentVersion != "unspecified") {
+        parchment {
+            minecraftVersion = parchmentMinecraft
+            mappingsVersion = parchmentVersion
+        }
     }
 }
 

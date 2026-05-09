@@ -9,8 +9,8 @@ plugins {
 val modId: String by properties
 val minecraftVersion: String by properties
 val neoforgeVersion: String by properties
-val parchmentVersion: String by properties
-val parchmentMinecraft = property("parchmentMinecraft").let {
+val parchmentVersion: String = (findProperty("parchmentVersion") as? String) ?: "unspecified"
+val parchmentMinecraft = findProperty("parchmentMinecraft").let {
     if (it !is String || it.isBlank()) minecraftVersion else it
 }
 
@@ -25,9 +25,11 @@ neoForge {
         accessTransformers.from(at)
     }
 
-    parchment {
-        minecraftVersion = parchmentMinecraft
-        mappingsVersion = parchmentVersion
+    if (parchmentVersion != "unspecified") {
+        parchment {
+            minecraftVersion = parchmentMinecraft
+            mappingsVersion = parchmentVersion
+        }
     }
 
     runs {

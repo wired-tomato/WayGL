@@ -11,8 +11,8 @@ repositories {
 dependencies {
     compileOnly(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
 
-    compileOnly("org.lwjgl", "lwjgl")
-    compileOnly("org.lwjgl", "lwjgl-glfw")
+    compileOnly("org.lwjgl:lwjgl")
+    compileOnly("org.lwjgl:lwjgl-glfw")
 
     compileOnly("org.slf4j:slf4j-api:2.0.17")
 
@@ -24,6 +24,9 @@ dependencies {
 java {
     withSourcesJar()
 
-    //for use in 1.20.x
-    //targetCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = if (findProject(":mod:1.20.x") != null) {
+        JavaVersion.VERSION_17
+    } else if (findProject(":mod:1.21.9-11") != null || findProject(":mod:1.21.x-8") != null) {
+        JavaVersion.VERSION_21
+    } else JavaVersion.VERSION_25
 }
