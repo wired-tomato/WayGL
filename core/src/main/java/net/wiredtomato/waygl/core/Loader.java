@@ -10,6 +10,9 @@ import org.lwjgl.system.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public final class Loader {
     private static final Logger LOGGER = LoggerFactory.getLogger("WayGL/Loader");
 
@@ -48,6 +51,14 @@ public final class Loader {
         }
 
         return useWayland;
+    }
+
+    public static boolean isFlatpak() {
+        if (Files.exists(Path.of("/.flatpak-info"))) return true;
+
+        var flatpakId = System.getenv("FLATPAK_ID");
+
+        return flatpakId != null && !flatpakId.isEmpty();
     }
 
     public static Boolean isWayland() {

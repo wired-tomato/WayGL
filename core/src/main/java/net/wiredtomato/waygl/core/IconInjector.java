@@ -117,11 +117,15 @@ public final class IconInjector {
     }
 
     private static void updateIcons() {
+
         try {
-            var xdgUpdateTask = new ProcessBuilder("xdg-icon-resource", "forceupdate");
+            String[] xdgIconResourceCmdLine = Loader.isFlatpak() ?
+                    new String[] { "flatpak-spawn", "--host", "xdg-icon-resource", "forceupdate" } : new String[] { "xdg-icon-resource", "forceupdate" };
+
+            var xdgUpdateTask = new ProcessBuilder(xdgIconResourceCmdLine);
             xdgUpdateTask.start();
         } catch (IOException e) {
-            LOGGER.error("Failed to update icon theme", e);
+            LOGGER.warn("Failed to update icon theme", e);
         }
     }
 }

@@ -70,7 +70,7 @@ subprojects {
     tasks.withType<ProcessResources> {
         inputs.properties(props)
 
-        filesMatching(listOf("fabric.mod.json", "META-INF/neoforge.mods.toml")) {
+        filesMatching(listOf("fabric.mod.json", "META-INF/neoforge.mods.toml", "*.mixins.json")) {
             expand(props)
         }
     }
