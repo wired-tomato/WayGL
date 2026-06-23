@@ -1,0 +1,3 @@
+plugins {
+    `multiloader-mod-root`
+}

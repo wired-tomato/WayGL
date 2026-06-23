@@ -45,7 +45,8 @@ fun includeVersion(version: String, disableFabric: Boolean = false, disableNeoFo
 
 //disable based on current version
 //also change java target in :core
-includeVersion("26.1.x")
+includeVersion("26.2")
+//includeVersion("26.1.x")
 //includeVersion("1.21.9-11")
 //includeVersion("1.21.x-8")
 //includeVersion("1.20.x", disableNeoForge = true)
