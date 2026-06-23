@@ -29,4 +29,5 @@ java {
     } else if (findProject(":mod:1.21.9-11") != null || findProject(":mod:1.21.x-8") != null) {
         JavaVersion.VERSION_21
     } else JavaVersion.VERSION_25
+    
 }
